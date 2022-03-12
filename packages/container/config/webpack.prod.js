@@ -18,6 +18,9 @@ const prodConfig = {
                 marketing: `marketing@${domain}/marketing/entryPoint.js`
             },
             shared: packageJson.dependencies,
+        }),
+        new HtmlWebpackPlugin({
+            template: './public/index.html'
         })
     ]
 
