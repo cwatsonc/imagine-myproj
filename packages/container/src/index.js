@@ -1,1 +1,1 @@
-import('./bootstrap').catch(e => console.log(JSON.toString(e, null, 2)));
+import('./bootstrap').catch(e => console.log(JSON.stringify(e, null, 2)));
