@@ -3,8 +3,8 @@ import React from 'react'
 
 export default () => {
     return <div>
-        <h1>Make it to app!</h1>
+        <h1>Made it to app!</h1>
         <hr></hr>
-        {/* <MarketingApp /> */}
+        <MarketingApp />
     </div>
 }
