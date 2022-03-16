@@ -24,6 +24,8 @@ jobs:
       - name: build distribution
         run: |
           yarn run build
+        env: 
+          PRODUCTION_DOMAIN: ${{secrets.PRODUCTION_DOMAIN}}
       - uses: shinyinc/action-aws-cli@v1.2
       - name: deploy to s3
         run: |
