@@ -1,0 +1,42 @@
+name: deploy-marketing
+
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/marketing/**'
+      - '.github/workflows/**' 
+
+defaults:
+  run:
+    working-directory: packages/marketing
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: install dependencies
+        run: | 
+          yarn
+      - name: build distribution
+        run: |
+          yarn run build
+      - uses: shinyinc/action-aws-cli@v1.2
+      - name: deploy to s3
+        run: |
+          aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/marketing/latest
+        env: 
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_DEFAULT_REGION: "us-west-2"
+      - name: invalidate cached CDN 
+        run: |
+          aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/marketing/latest/remoteEntry.js"
+        env: 
+          AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+          AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+          AWS_DISTRIBUTION_ID: ${{secrets.AWS_DISTRIBUTION_ID}}
+          AWS_DEFAULT_REGION: "us-west-2"
